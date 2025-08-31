@@ -1,12 +1,11 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { RouterLink, RouterView } from "vue-router";
+</script>
 
 <template>
-	<h1>You did it!</h1>
-	<p>
-		Visit
-		<a href="https://vuejs.org/" target="_blank" rel="noopener"
-			>vuejs.org</a
-		>
-		to read the documentation
-	</p>
+	<h1>Vue Final</h1>
+	<RouterLink to="login">Go to Test</RouterLink> |
+	<RouterLink to="signup">Go to Test</RouterLink>
+
+	<RouterView />
 </template>

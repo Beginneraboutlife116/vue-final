@@ -1,33 +1,33 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import { RouterLink } from "vue-router";
+import { ref, computed } from 'vue';
+import { RouterLink } from 'vue-router';
 
-import FormItem from "@/components/FormItem.vue";
-import Input from "@/components/Input.vue";
-import Button from "@/components/Button.vue";
+import FormItem from '@/components/FormItem.vue';
+import Input from '@/components/Input.vue';
+import Button from '@/components/Button.vue';
 
 const email = ref(null);
 const password = ref(null);
 
 const errorMessages = computed(() => {
 	const messages = {
-		email: "",
-		password: "",
+		email: '',
+		password: '',
 	};
 
 	if (email.value !== null) {
-		if (email.value === "") {
-			messages.email = "此欄位不可為空";
+		if (email.value === '') {
+			messages.email = '此欄位不可為空';
 		} else {
-			messages.email = "";
+			messages.email = '';
 		}
 	}
 
 	if (password.value !== null) {
-		if (password.value === "") {
-			messages.password = "此欄位不可為空";
+		if (password.value === '') {
+			messages.password = '此欄位不可為空';
 		} else {
-			messages.password = "";
+			messages.password = '';
 		}
 	}
 
@@ -35,7 +35,7 @@ const errorMessages = computed(() => {
 });
 
 const handleSubmit = () => {
-	console.log({ email: email.value, password: password.value })
+	console.log({ email: email.value, password: password.value });
 };
 </script>
 

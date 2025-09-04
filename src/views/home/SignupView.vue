@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed } from 'vue';
 
-import { RouterLink } from "vue-router";
-import FormItem from "@/components/FormItem.vue";
-import Input from "@/components/Input.vue";
-import Button from "@/components/Button.vue";
+import { RouterLink } from 'vue-router';
+import FormItem from '@/components/FormItem.vue';
+import Input from '@/components/Input.vue';
+import Button from '@/components/Button.vue';
 
 const email = ref(null);
 const nickname = ref(null);
@@ -13,43 +13,43 @@ const confirmPassword = ref(null);
 
 const errorMessages = computed(() => {
 	const messages = {
-		email: "",
-		nickname: "",
-		password: "",
-		confirmPassword: "",
+		email: '',
+		nickname: '',
+		password: '',
+		confirmPassword: '',
 	};
 
 	if (email.value !== null) {
-		if (email.value === "") {
-			messages.email = "此欄位不可為空";
+		if (email.value === '') {
+			messages.email = '此欄位不可為空';
 		} else {
-			messages.email = "";
+			messages.email = '';
 		}
 	}
 
 	if (nickname.value !== null) {
-		if (nickname.value === "") {
-			messages.nickname = "此欄位不可為空";
+		if (nickname.value === '') {
+			messages.nickname = '此欄位不可為空';
 		} else {
-			messages.nickname = "";
+			messages.nickname = '';
 		}
 	}
 
 	if (password.value !== null) {
-		if (password.value === "") {
-			messages.password = "此欄位不可為空";
+		if (password.value === '') {
+			messages.password = '此欄位不可為空';
 		} else {
-			messages.password = "";
+			messages.password = '';
 		}
 	}
 
 	if (confirmPassword.value !== null) {
-		if (confirmPassword.value === "") {
-			messages.confirmPassword = "此欄位不可為空";
+		if (confirmPassword.value === '') {
+			messages.confirmPassword = '此欄位不可為空';
 		} else if (confirmPassword.value !== password.value) {
-			messages.confirmPassword = "密碼不一致，請重新輸入";
+			messages.confirmPassword = '密碼不一致，請重新輸入';
 		} else {
-			messages.confirmPassword = "";
+			messages.confirmPassword = '';
 		}
 	}
 

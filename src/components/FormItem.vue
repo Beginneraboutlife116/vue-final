@@ -3,8 +3,8 @@ interface FormItemProps {
 	name: string;
 }
 
-const { name = "" } = defineProps<FormItemProps>();
-const errorMessageClasses = "text-thirdary text-sm leading-none mt-1";
+const { name = '' } = defineProps<FormItemProps>();
+const errorMessageClasses = 'text-thirdary text-sm leading-none mt-1';
 </script>
 
 <template>

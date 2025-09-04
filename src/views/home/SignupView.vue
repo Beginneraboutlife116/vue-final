@@ -14,21 +14,25 @@ const password = ref(null);
 const confirmPassword = ref(null);
 
 const errorMessages = computed(() => {
-	return {
-		email: validateRequired(email.value),
-		nickname: validateRequired(nickname.value),
-		password: validateRequired(password.value),
-		confirmPassword: (() => {
-			if (confirmPassword.value === null) {
-				return '';
+	const confirmPasswordErrorMessage = (() => {
+		if (confirmPassword.value !== null) {
+			if (confirmPassword.value === '') {
+				return '此欄位不可為空';
 			}
 
 			if (confirmPassword.value !== password.value) {
 				return '密碼不一致';
 			}
+		}
 
-			return validateRequired(confirmPassword.value);
-		})(),
+		return '';
+	})();
+
+	return {
+		email: validateRequired(email.value),
+		nickname: validateRequired(nickname.value),
+		password: validateRequired(password.value),
+		confirmPassword: confirmPasswordErrorMessage,
 	};
 });
 

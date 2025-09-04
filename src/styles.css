@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+@theme {
+	--color-primary: #ffd370;
+	--color-secondary: #333;
+	--color-tertiary: #d87355;
+}
+
+body {
+	background-color: var(--color-primary);
+	color: var(--color-secondary);
+	font-family: "Noto Sans TC", sans-serif;
+}

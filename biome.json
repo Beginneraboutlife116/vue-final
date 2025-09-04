@@ -21,6 +21,18 @@
 			"vue": "recommended"
 		}
 	},
+	"overrides": [
+		{
+			"includes": ["*.css", "**/*.css"],
+			"linter": {
+				"rules": {
+					"suspicious": {
+						"noUnknownAtRules": "off"
+					}
+				}
+			}
+		}
+	],
 	"javascript": {
 		"formatter": {
 			"quoteStyle": "single"

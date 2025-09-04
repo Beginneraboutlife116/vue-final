@@ -18,22 +18,17 @@ const errorMessages = computed(() => {
 		email: validateRequired(email.value),
 		nickname: validateRequired(nickname.value),
 		password: validateRequired(password.value),
-		confirmPassword: validateRequired(
-			confirmPassword.value,
-			(value: string | null): string => {
-				if (value !== null) {
-					if (value === '') {
-						return '此欄位不可為空';
-					}
-
-					if (value !== password.value) {
-						return '密碼不一致';
-					}
-				}
-
+		confirmPassword: (() => {
+			if (confirmPassword.value === null) {
 				return '';
-			},
-		),
+			}
+
+			if (confirmPassword.value !== password.value) {
+				return '密碼不一致';
+			}
+
+			return validateRequired(confirmPassword.value);
+		})(),
 	};
 });
 

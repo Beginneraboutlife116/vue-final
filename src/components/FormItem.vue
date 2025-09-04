@@ -4,7 +4,7 @@ interface FormItemProps {
 }
 
 const { name = '' } = defineProps<FormItemProps>();
-const errorMessageClasses = 'text-thirdary text-sm leading-none mt-1';
+const errorMessageClasses = 'text-tertiary text-sm leading-none mt-1';
 </script>
 
 <template>

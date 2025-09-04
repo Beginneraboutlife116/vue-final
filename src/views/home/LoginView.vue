@@ -6,32 +6,16 @@ import FormItem from '@/components/FormItem.vue';
 import Input from '@/components/Input.vue';
 import Button from '@/components/Button.vue';
 
+import { validateRequired } from './utils';
+
 const email = ref(null);
 const password = ref(null);
 
 const errorMessages = computed(() => {
-	const messages = {
-		email: '',
-		password: '',
+	return {
+		email: validateRequired(email.value),
+		password: validateRequired(password.value),
 	};
-
-	if (email.value !== null) {
-		if (email.value === '') {
-			messages.email = '此欄位不可為空';
-		} else {
-			messages.email = '';
-		}
-	}
-
-	if (password.value !== null) {
-		if (password.value === '') {
-			messages.password = '此欄位不可為空';
-		} else {
-			messages.password = '';
-		}
-	}
-
-	return messages;
 });
 
 const handleSubmit = () => {
@@ -68,7 +52,7 @@ const handleSubmit = () => {
 					required
 				/>
 			</template>
-			 <template #message>{{ errorMessages.password }}</template>
+			<template #message>{{ errorMessages.password }}</template>
 		</FormItem>
 
 		<div class="grid justify-center pt-[11px] gap-6 text-center">

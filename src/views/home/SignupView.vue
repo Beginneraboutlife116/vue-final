@@ -6,54 +6,35 @@ import FormItem from '@/components/FormItem.vue';
 import Input from '@/components/Input.vue';
 import Button from '@/components/Button.vue';
 
+import { validateRequired } from './utils';
+
 const email = ref(null);
 const nickname = ref(null);
 const password = ref(null);
 const confirmPassword = ref(null);
 
 const errorMessages = computed(() => {
-	const messages = {
-		email: '',
-		nickname: '',
-		password: '',
-		confirmPassword: '',
+	return {
+		email: validateRequired(email.value),
+		nickname: validateRequired(nickname.value),
+		password: validateRequired(password.value),
+		confirmPassword: validateRequired(
+			confirmPassword.value,
+			(value: string | null): string => {
+				if (value !== null) {
+					if (value === '') {
+						return '此欄位不可為空';
+					}
+
+					if (value !== password.value) {
+						return '密碼不一致';
+					}
+				}
+
+				return '';
+			},
+		),
 	};
-
-	if (email.value !== null) {
-		if (email.value === '') {
-			messages.email = '此欄位不可為空';
-		} else {
-			messages.email = '';
-		}
-	}
-
-	if (nickname.value !== null) {
-		if (nickname.value === '') {
-			messages.nickname = '此欄位不可為空';
-		} else {
-			messages.nickname = '';
-		}
-	}
-
-	if (password.value !== null) {
-		if (password.value === '') {
-			messages.password = '此欄位不可為空';
-		} else {
-			messages.password = '';
-		}
-	}
-
-	if (confirmPassword.value !== null) {
-		if (confirmPassword.value === '') {
-			messages.confirmPassword = '此欄位不可為空';
-		} else if (confirmPassword.value !== password.value) {
-			messages.confirmPassword = '密碼不一致，請重新輸入';
-		} else {
-			messages.confirmPassword = '';
-		}
-	}
-
-	return messages;
 });
 
 const handleSubmit = () => {

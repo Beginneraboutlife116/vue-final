@@ -31,7 +31,10 @@ const filteredTodos = computed(() => {
 	return todos.value;
 });
 
-const setInputRef = (id: string, input: HTMLInputElement | null | undefined) => {
+const setInputRef = (
+	id: string,
+	input: HTMLInputElement | null | undefined,
+) => {
 	if (input) {
 		inputRefs.value.set(id, input);
 	} else {
@@ -75,7 +78,7 @@ const onEditTodo = (id: string) => {
 
 		nextTick(() => {
 			input.focus();
-		})
+		});
 	}
 };
 

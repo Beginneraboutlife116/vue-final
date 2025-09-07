@@ -151,6 +151,7 @@ onMounted(() => {
 						name="todo"
 						class="flex-auto -my-1 -ms-1 outline-none"
 						placeholder="新增待辦事項"
+						@keyup.enter="onAddTodo"
 					/>
 					<Button
 						class="p-2.5"
@@ -169,7 +170,7 @@ onMounted(() => {
 					/>
 				</div>
 
-				<div v-else class="bg-white rounded-[10px] shadow-[0px_0px_15px_0px_rgba(0,0,0,0.15)]">
+				<div v-else class="bg-white rounded-[10px] shadow-[0px_0px_15px_0px_rgba(0,0,0,0.15)] min-h-[446px] max-h-[653px] flex flex-col">
 					<div class="grid grid-cols-3 text-tertiary">
 						<div>
 							<label
@@ -226,7 +227,7 @@ onMounted(() => {
 						</div>
 					</div>
 
-					<ul class="p-[8px_16px_16px_24px]">
+					<ul class="p-[8px_16px_0px_24px] flex-auto overflow-y-auto">
 						<li v-for="todo in filteredTodos" :key="todo.id" class="flex items-center gap-4 border-b-1 border-b-tertiary md:border-none">
 							<div class="flex flex-auto items-center gap-4 py-4 md:border-b-1 md:border-b-tertiary">
 								<input
@@ -266,7 +267,7 @@ onMounted(() => {
 						</li>
 					</ul>
 
-					<div class="p-[0px_48px_24px_24px]">
+					<div class="p-[16px_48px_24px_24px]">
 						<span>{{ incompletedTodosCount }} 個待完成項目</span>
 					</div>
 				</div>

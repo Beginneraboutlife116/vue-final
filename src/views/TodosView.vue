@@ -66,7 +66,11 @@ const onEditTodo = (id: string) => {
 };
 
 const onFinishEditTodo = (event: Event) => {
-	const { name: id, value: content } = event.target as HTMLInputElement;
+	const target = event.target;
+	if (!(target instanceof HTMLInputElement)) {
+		return;
+	}
+	const { name: id, value: content } = target;
 	const todo = todos.value.find((todo) => todo.id === id);
 	if (todo) {
 		todo.content = content;

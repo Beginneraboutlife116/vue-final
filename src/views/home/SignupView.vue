@@ -1,12 +1,16 @@
 <script setup lang="ts">
+import Swal from 'sweetalert2'
 import { ref, computed } from 'vue';
+import { useRouter, RouterLink } from 'vue-router';
 
-import { RouterLink } from 'vue-router';
 import FormItem from '@/components/FormItem.vue';
 import Input from '@/components/Input.vue';
 import Button from '@/components/Button.vue';
 
+import { signup, type SignupParams } from '@/apis';
 import { validateRequired } from './utils';
+
+const router = useRouter();
 
 const email = ref(null);
 const nickname = ref(null);
@@ -37,11 +41,44 @@ const errorMessages = computed(() => {
 });
 
 const handleSubmit = () => {
-	console.log({
+	if (errorMessages.value.email || errorMessages.value.nickname || errorMessages.value.password || errorMessages.value.confirmPassword) {
+		return;
+	}
+
+	if (!email.value || !nickname.value || !password.value) {
+		Swal.fire({
+			icon: 'error',
+			title: '註冊失敗',
+			text: '欄位不可為空',
+		});
+
+		return;
+	}
+
+	const params = {
 		email: email.value,
 		nickname: nickname.value,
 		password: password.value,
-		confirmPassword: confirmPassword.value,
+	}
+
+	signup(params).then(() => {
+		Swal.fire({
+			icon: 'success',
+			title: '註冊成功',
+			showConfirmButton: false,
+			timer: 1500,
+			toast: true,
+			position: 'top-end'
+		})
+
+		router.push('/');
+	}).catch((error) => {
+		const errorMessage = error?.response?.data?.message || '發生未知錯誤，請稍後再試';
+		Swal.fire({
+			icon: 'error',
+			title: '註冊失敗',
+			text: errorMessage,
+		})
 	});
 };
 </script>

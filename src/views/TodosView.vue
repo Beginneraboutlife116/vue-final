@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, shallowRef, nextTick, onMounted } from 'vue';
 
+import { useAuthStore } from '@/stores/authStore';
+
 import Input from '@/components/Input.vue';
 import Button from '@/components/Button.vue';
 
@@ -16,10 +18,13 @@ const ALL = 'all';
 const INCOMPLETED = 'incompleted';
 const COMPLETED = 'completed';
 
+const authStore = useAuthStore();
+
 const filter = ref(ALL);
 const todos = ref<Todo[]>([]);
 const newTodoContent = ref('');
 const inputRefs = shallowRef(new Map<string, HTMLInputElement>());
+const nickname = ref('');
 
 const filteredTodos = computed(() => {
 	if (filter.value === INCOMPLETED) {
@@ -45,6 +50,10 @@ const setInputRef = (
 const incompletedTodosCount = computed(() => {
 	return todos.value.filter((todo) => !todo.status).length;
 });
+
+const handleLogout = () => {
+	console.log('logout');
+}
 
 const onAddTodo = () => {
 	if (!newTodoContent.value) {
@@ -100,6 +109,10 @@ const onDeleteTodo = (id: string) => {
 };
 
 onMounted(() => {
+	if (authStore.user) {
+		nickname.value = authStore.user.nickname
+	}
+
 	const fetchedTodos = [
 		{
 			id: '123456789',
@@ -140,8 +153,8 @@ onMounted(() => {
 			<header class="flex justify-between items-center mb-4 md:mb-10">
 				<img src="@/assets/images/logo.png" alt="online todo list" class="max-w-60" />
 				<div>
-					<span class="hidden me-6 md:inline">使用者名稱</span>
-					<button>登出</button>
+					<span class="hidden me-6 md:inline font-bold">{{ nickname }}的代辦</span>
+					<button class="cursor-pointer" @click="handleLogout">登出</button>
 				</div>
 			</header>
 			<section class="mx-auto max-w-[500px] max-h-dvh">

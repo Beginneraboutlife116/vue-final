@@ -243,7 +243,7 @@ onMounted(() => {
 								</div>
 							</div>
 							<button @click="onDeleteTodo(todo.id)" class="cursor-pointer">
-								<img src="@/assets/images/todo-delete.svg" alt="刪除這一個代辦事項" />
+								<img src="@/assets/images/todo-delete.svg" alt="刪除這一個待辦事項" />
 							</button>
 						</li>
 					</ul>

@@ -1,12 +1,20 @@
 <script setup lang="ts">
+import Swal from 'sweetalert2'
 import { ref, computed } from 'vue';
-import { RouterLink } from 'vue-router';
+import { useRouter, RouterLink } from 'vue-router';
+
+import { useAuthStore } from '@/stores/authStore';
 
 import FormItem from '@/components/FormItem.vue';
 import Input from '@/components/Input.vue';
 import Button from '@/components/Button.vue';
 
+import { login, type LoginParams } from '@/apis';
 import { validateRequired } from './utils';
+
+const router = useRouter();
+
+const { setUserAction } = useAuthStore();
 
 const email = ref(null);
 const password = ref(null);
@@ -19,7 +27,63 @@ const errorMessages = computed(() => {
 });
 
 const handleSubmit = () => {
-	console.log({ email: email.value, password: password.value });
+	if (errorMessages.value.email || errorMessages.value.password) {
+		Swal.fire({
+			icon: 'error',
+			title: '登入失敗',
+			text: '請檢查您的輸入',
+		});
+		return;
+	}
+
+	if (!email.value || !password.value) {
+		Swal.fire({
+			icon: 'error',
+			title: '登入失敗',
+			text: '欄位不可為空',
+		});
+
+		return;
+	}
+
+	const params = {
+		email: email.value,
+		password: password.value,
+	}
+
+	login(params)
+		.then((response) => {
+			const { data } = response;
+
+			if (!data.status) {
+				throw new Error('請與客服連繫');
+			}
+
+			localStorage.setItem('auth-data', JSON.stringify({
+				exp: data.exp,
+				token: data.token
+			}));
+
+			setUserAction(data);
+
+			Swal.fire({
+				icon: 'success',
+				title: '登入成功',
+				showConfirmButton: false,
+				timer: 1500,
+				toast: true,
+				position: 'top-end'
+			})
+
+			router.push('/todos');
+		})
+		.catch((error) => {
+			Swal.fire({
+				icon: 'error',
+				title: '登入失敗',
+				text: error.message?.data?.message || error.message,
+			});
+		});
 };
 </script>
 

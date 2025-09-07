@@ -6,23 +6,28 @@ const router = createRouter({
 		{
 			path: '/',
 			name: 'home',
-			component: () => import('../views/home/HomeView.vue'),
+			component: () => import('@/views/home/HomeView.vue'),
 			children: [
 				{
 					path: '',
-					component: () => import('../views/home/LoginView.vue'),
+					component: () => import('@/views/home/LoginView.vue'),
 				},
 				{
 					path: '/signup',
 					name: 'signup',
-					component: () => import('../views/home/SignupView.vue'),
+					component: () => import('@/views/home/SignupView.vue'),
 				},
 			],
 		},
 		{
+			path: '/todos',
+			name: 'todos',
+			component: () => import('@/views/TodosView.vue'),
+		},
+		{
 			path: '/:pathMatch(.*)*',
 			name: 'not-found',
-			component: () => import('../views/NotFoundView.vue'),
+			component: () => import('@/views/NotFoundView.vue'),
 		},
 	],
 });

@@ -81,7 +81,7 @@ const handleSubmit = () => {
 			Swal.fire({
 				icon: 'error',
 				title: '登入失敗',
-				text: error.message?.data?.message || error.message,
+				text: error.response?.data?.message  || '發生未知錯誤，請稍後再試',
 			});
 		});
 };

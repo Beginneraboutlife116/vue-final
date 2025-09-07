@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, shallowRef, nextTick, onMounted } from 'vue';
 
 import Input from '@/components/Input.vue';
 import Button from '@/components/Button.vue';
@@ -19,6 +19,7 @@ const COMPLETED = 'completed';
 const filter = ref(ALL);
 const todos = ref<Todo[]>([]);
 const newTodoContent = ref('');
+const inputRefs = shallowRef(new Map<string, HTMLInputElement>());
 
 const filteredTodos = computed(() => {
 	if (filter.value === INCOMPLETED) {
@@ -29,6 +30,14 @@ const filteredTodos = computed(() => {
 
 	return todos.value;
 });
+
+const setInputRef = (id: string, input: HTMLInputElement | null | undefined) => {
+	if (input) {
+		inputRefs.value.set(id, input);
+	} else {
+		inputRefs.value.delete(id);
+	}
+};
 
 const incompletedTodosCount = computed(() => {
 	return todos.value.filter((todo) => !todo.status).length;
@@ -60,8 +69,13 @@ const onCheckTodo = (id: string) => {
 
 const onEditTodo = (id: string) => {
 	const todo = todos.value.find((todo) => todo.id === id);
-	if (todo) {
+	const input = inputRefs.value.get(id);
+	if (todo && input) {
 		todo.isEditing = true;
+
+		nextTick(() => {
+			input.focus();
+		})
 	}
 };
 
@@ -235,6 +249,7 @@ onMounted(() => {
 									<span v-show="!todo.isEditing">{{ todo.content }}</span>
 									<input
 										v-show="todo.isEditing"
+										:ref="(el) => setInputRef(todo.id, el as HTMLInputElement | null | undefined)"
 										:name="todo.id"
 										:value="todo.content"
 										@blur="onFinishEditTodo"

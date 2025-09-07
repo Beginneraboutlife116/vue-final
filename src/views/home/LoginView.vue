@@ -59,7 +59,7 @@ const handleSubmit = () => {
 				throw new Error('請與客服連繫');
 			}
 
-			localStorage.setItem(data.nickname, JSON.stringify({
+			localStorage.setItem('auth-data', JSON.stringify({
 				exp: data.exp,
 				token: data.token
 			}));
@@ -81,7 +81,7 @@ const handleSubmit = () => {
 			Swal.fire({
 				icon: 'error',
 				title: '登入失敗',
-				text: error.message,
+				text: error.message?.data?.message || error.message,
 			});
 		});
 };

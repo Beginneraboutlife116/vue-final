@@ -73,7 +73,7 @@ const handleSubmit = () => {
 
 		router.push('/');
 	}).catch((error) => {
-		const errorMessage = error.response.data.message;
+		const errorMessage = error?.response?.data?.message || '發生未知錯誤，請稍後再試';
 		Swal.fire({
 			icon: 'error',
 			title: '註冊失敗',

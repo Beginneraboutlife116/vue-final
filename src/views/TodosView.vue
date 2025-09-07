@@ -224,7 +224,7 @@ onMounted(() => {
 									v-show="todo.status"
 									class="cursor-pointer"
 									src="@/assets/images/todo-checked.svg"
-									alt="代辦事項已完成"
+									alt="待辦事項已完成"
 									@click="onCheckTodo(todo.id)"
 								/>
 								<div

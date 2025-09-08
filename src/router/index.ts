@@ -47,7 +47,9 @@ router.beforeEach((to) => {
 				const { nickname } = response.data;
 				authStore.setNicknameAction(nickname);
 
-				router.push('/todos');
+				if (to.name !== 'todos') {
+					router.push('/todos');
+				}
 			})
 			.catch(() => {
 				Swal.fire({
@@ -60,7 +62,7 @@ router.beforeEach((to) => {
 					timerProgressBar: true,
 				});
 
-				router.push('/');
+				router.replace('/');
 			});
 	} else if (to.name === 'todos') {
 		Swal.fire({
@@ -73,7 +75,7 @@ router.beforeEach((to) => {
 			timerProgressBar: true,
 		});
 
-		router.push('/');
+		router.replace('/');
 	}
 });
 

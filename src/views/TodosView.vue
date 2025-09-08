@@ -233,7 +233,7 @@ onMounted(() => {
 				</div>
 
 				<div v-if="todos.length === 0" class="text-center mt-15">
-					<span v-if='isLoading'>待辦事項載入中…</span>
+					<span v-if="isLoading">待辦事項載入中…</span>
 					<span v-else>目前尚無待辦事項</span>
 					<img
 						src="@/assets/images/empty.png"

@@ -9,7 +9,11 @@ import Input from '@/components/Input.vue';
 import Button from '@/components/Button.vue';
 
 import { login, type LoginParams } from '@/apis';
-import { showErrorMessageModal, showSuccessToast, validateRequired } from '@/utils';
+import {
+	showErrorMessageModal,
+	showSuccessToast,
+	validateRequired,
+} from '@/utils';
 
 const router = useRouter();
 
@@ -57,13 +61,10 @@ const handleSubmit = () => {
 				throw new Error('請與客服連繫');
 			}
 
-			localStorage.setItem(
-				'token',
-				data.token
-			);
+			localStorage.setItem('token', data.token);
 
 			setNicknameAction(data.nickname);
-			showSuccessToast('登入成功')
+			showSuccessToast('登入成功');
 
 			router.push('/todos');
 		})

@@ -7,7 +7,14 @@ import { useAuthStore } from '@/stores/authStore';
 import Input from '@/components/Input.vue';
 import Button from '@/components/Button.vue';
 
-import { logout, createTodo, getTodos, updateTodo, updateTodoStatus, deleteTodo } from '@/apis';
+import {
+	logout,
+	createTodo,
+	getTodos,
+	updateTodo,
+	updateTodoStatus,
+	deleteTodo,
+} from '@/apis';
 import { showSuccessToast, showErrorMessageModal } from '@/utils';
 
 interface Todo {
@@ -59,7 +66,7 @@ const incompletedTodosCount = computed(() => {
 const handleLogout = () => {
 	logout()
 		.then((response) => {
-			showSuccessToast(response.data.message)
+			showSuccessToast(response.data.message);
 
 			localStorage.removeItem('token');
 			authStore.setNicknameAction('');
@@ -79,19 +86,21 @@ const onAddTodo = () => {
 		return;
 	}
 
-	createTodo(newTodoContent.value).then((response) => {
-		showSuccessToast('新增成功')
+	createTodo(newTodoContent.value)
+		.then((response) => {
+			showSuccessToast('新增成功');
 
-		todos.value.push({
-			...response.data.newTodo,
-			isEditing: false,
-		});
-	}).catch((error) => {
-		showErrorMessageModal({
-			title: '新增失敗',
-			text: error.response.data.message,
+			todos.value.push({
+				...response.data.newTodo,
+				isEditing: false,
+			});
 		})
-	})
+		.catch((error) => {
+			showErrorMessageModal({
+				title: '新增失敗',
+				text: error.response.data.message,
+			});
+		});
 
 	newTodoContent.value = '';
 };
@@ -101,16 +110,18 @@ const onCheckTodo = (id: string) => {
 	if (todo) {
 		todo.status = !todo.status;
 
-		updateTodoStatus(id).then(() => {
-			showSuccessToast('更新待辦事項狀態成功')
-		}).catch((error) => {
-			showErrorMessageModal({
-				title: '更新待辦事項狀態失敗',
-				text: error.response.data.message,
+		updateTodoStatus(id)
+			.then(() => {
+				showSuccessToast('更新待辦事項狀態成功');
 			})
+			.catch((error) => {
+				showErrorMessageModal({
+					title: '更新待辦事項狀態失敗',
+					text: error.response.data.message,
+				});
 
-			todo.status = !todo.status;
-		})
+				todo.status = !todo.status;
+			});
 	}
 };
 
@@ -133,53 +144,63 @@ const onFinishEditTodo = (event: Event) => {
 	}
 	const { name: id, value: content } = target;
 
-	updateTodo(id, content).then(() => {
-		showSuccessToast('更新成功');
+	updateTodo(id, content)
+		.then(() => {
+			showSuccessToast('更新成功');
 
-		const todo = todos.value.find((todo) => todo.id === id);
+			const todo = todos.value.find((todo) => todo.id === id);
 
-		if (todo) {
-			todo.content = content;
-			todo.isEditing = false;
-		}
-	}).catch((error) => {
-		showErrorMessageModal({
-			title: '更新失敗',
-			text: error.response.data.message,
+			if (todo) {
+				todo.content = content;
+				todo.isEditing = false;
+			}
 		})
-	})
+		.catch((error) => {
+			showErrorMessageModal({
+				title: '更新失敗',
+				text: error.response.data.message,
+			});
+		});
 };
 
 const onDeleteTodo = (id: string) => {
-	deleteTodo(id).then(() => {
-		showSuccessToast('刪除成功');
+	deleteTodo(id)
+		.then(() => {
+			showSuccessToast('刪除成功');
 
-		todos.value = todos.value.filter((todo) => todo.id !== id);
-	}).catch((error) => {
-		showErrorMessageModal({
-			title: '刪除失敗',
-			text: error.response.data.message,
+			todos.value = todos.value.filter((todo) => todo.id !== id);
 		})
-	})
+		.catch((error) => {
+			showErrorMessageModal({
+				title: '刪除失敗',
+				text: error.response.data.message,
+			});
+		});
 };
 
 onMounted(() => {
 	isLoading.value = true;
 
-	getTodos().then((response) => {
-		const fetchedTodos = response.data.data;
-		todos.value = fetchedTodos.length > 0 ? fetchedTodos.map((todo: Todo) => ({
-			...todo,
-			isEditing: false,
-		})) : [];
-	}).catch((error) => {
-		showErrorMessageModal({
-			title: '取得待辦事項失敗',
-			text: error.response.data.message,
+	getTodos()
+		.then((response) => {
+			const fetchedTodos = response.data.data;
+			todos.value =
+				fetchedTodos.length > 0
+					? fetchedTodos.map((todo: Todo) => ({
+							...todo,
+							isEditing: false,
+						}))
+					: [];
 		})
-	}).finally(() => {
-		isLoading.value = false;
-	})
+		.catch((error) => {
+			showErrorMessageModal({
+				title: '取得待辦事項失敗',
+				text: error.response.data.message,
+			});
+		})
+		.finally(() => {
+			isLoading.value = false;
+		});
 });
 </script>
 

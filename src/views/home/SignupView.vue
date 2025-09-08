@@ -7,7 +7,11 @@ import Input from '@/components/Input.vue';
 import Button from '@/components/Button.vue';
 
 import { signup, type SignupParams } from '@/apis';
-import { showErrorMessageModal, showSuccessToast, validateRequired } from '@/utils';
+import {
+	showErrorMessageModal,
+	showSuccessToast,
+	validateRequired,
+} from '@/utils';
 
 const router = useRouter();
 
@@ -53,7 +57,7 @@ const handleSubmit = () => {
 		showErrorMessageModal({
 			title: '註冊失敗',
 			text: '欄位不可為空',
-		})
+		});
 
 		return;
 	}
@@ -66,7 +70,7 @@ const handleSubmit = () => {
 
 	signup(params)
 		.then(() => {
-			showSuccessToast('註冊成功')
+			showSuccessToast('註冊成功');
 
 			router.push('/');
 		})

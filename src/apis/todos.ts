@@ -10,10 +10,4 @@ const updateTodoStatus = (id: string) => apiHelper.patch(`/todos/${id}/toggle`);
 
 const deleteTodo = (id: string) => apiHelper.delete(`/todos/${id}`);
 
-export {
-	getTodos,
-	createTodo,
-	updateTodo,
-	updateTodoStatus,
-	deleteTodo,
-}
+export { getTodos, createTodo, updateTodo, updateTodoStatus, deleteTodo };

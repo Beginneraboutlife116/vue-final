@@ -42,29 +42,31 @@ router.beforeEach((to) => {
 	if (token) {
 		const authStore = useAuthStore();
 
-		return checkout().then((response) => {
-			const { nickname } = response.data;
-			authStore.setNicknameAction(nickname);
+		return checkout()
+			.then((response) => {
+				const { nickname } = response.data;
+				authStore.setNicknameAction(nickname);
 
-			if (to.name !== 'todos') {
-				return '/todos';
-			}
-		}).catch(() => {
-			localStorage.removeItem('token');
+				if (to.name !== 'todos') {
+					return '/todos';
+				}
+			})
+			.catch(() => {
+				localStorage.removeItem('token');
 
-			showErrorToast('請重新登入')
+				showErrorToast('請重新登入');
 
-			return {
-				path: '/',
-				replace: true
-			};
-		});
+				return {
+					path: '/',
+					replace: true,
+				};
+			});
 	} else if (to.name === 'todos') {
-		showErrorToast('請先登入')
+		showErrorToast('請先登入');
 
 		return {
 			path: '/',
-			replace: true
+			replace: true,
 		};
 	}
 });

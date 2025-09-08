@@ -1,4 +1,4 @@
-import Swal from "sweetalert2";
+import Swal from 'sweetalert2';
 
 function showSuccessToast(title: string) {
 	Swal.fire({
@@ -24,7 +24,4 @@ function showErrorToast(title: string) {
 	});
 }
 
-export {
-	showSuccessToast,
-	showErrorToast,
-}
+export { showSuccessToast, showErrorToast };

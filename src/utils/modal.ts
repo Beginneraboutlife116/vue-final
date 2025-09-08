@@ -1,8 +1,8 @@
-import Swal from "sweetalert2";
+import Swal from 'sweetalert2';
 
 function showErrorMessageModal({
 	title,
-	text
+	text,
 }: {
 	title: string;
 	text: string;
@@ -14,6 +14,4 @@ function showErrorMessageModal({
 	});
 }
 
-export {
-	showErrorMessageModal,
-}
+export { showErrorMessageModal };

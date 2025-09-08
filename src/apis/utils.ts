@@ -18,17 +18,20 @@ apiHelper.interceptors.request.use((config) => {
 	return config;
 });
 
-apiHelper.interceptors.response.use((response) => response, (error) => {
-	if (!error.response?.data?.message) {
-		showErrorMessageModal({
-			title: '未知錯誤',
-			text: '發生未知錯誤，請稍後再試',
-		})
+apiHelper.interceptors.response.use(
+	(response) => response,
+	(error) => {
+		if (!error.response?.data?.message) {
+			showErrorMessageModal({
+				title: '未知錯誤',
+				text: '發生未知錯誤，請稍後再試',
+			});
 
-		return;
-	}
+			return;
+		}
 
-	return Promise.reject(error);
-});
+		return Promise.reject(error);
+	},
+);
 
 export default apiHelper;

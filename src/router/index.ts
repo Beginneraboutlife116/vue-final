@@ -1,4 +1,8 @@
+import Swal from 'sweetalert2';
+import { useAuthStore } from '@/stores/authStore';
 import { createRouter, createWebHashHistory } from 'vue-router';
+
+import { checkout } from '@/apis';
 
 const router = createRouter({
 	history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -30,6 +34,55 @@ const router = createRouter({
 			component: () => import('@/views/NotFoundView.vue'),
 		},
 	],
+});
+
+router.beforeEach((to) => {
+	const token = localStorage.getItem('token');
+
+	if (token) {
+		const authStore = useAuthStore();
+
+		return checkout().then((response) => {
+			const { nickname } = response.data;
+			authStore.setNicknameAction(nickname);
+
+			if (to.name !== 'todos') {
+				return '/todos';
+			}
+		}).catch(() => {
+			localStorage.removeItem('token');
+
+			Swal.fire({
+				icon: 'error',
+				title: '請重新登入',
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				timer: 1500,
+				timerProgressBar: true,
+			});
+
+			return {
+				path: '/',
+				replace: true
+			};
+		});
+	} else if (to.name === 'todos') {
+		Swal.fire({
+			icon: 'error',
+			title: '請先登入',
+			toast: true,
+			position: 'top-end',
+			showConfirmButton: false,
+			timer: 1500,
+			timerProgressBar: true,
+		});
+
+		return {
+			path: '/',
+			replace: true
+		};
+	}
 });
 
 export default router;

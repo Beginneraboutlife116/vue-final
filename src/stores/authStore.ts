@@ -1,19 +1,12 @@
-import { defineStore } from "pinia";
-import { ref } from "vue";
-
-interface User {
-	status: boolean;
-	exp: number;
-	token: string;
-	nickname: string;
-}
+import { defineStore } from 'pinia';
+import { ref } from 'vue';
 
 export const useAuthStore = defineStore('auth', () => {
-	const user = ref<User | null>(null);
+	const nickname = ref('');
 
-	const setUserAction = (userData: User) => {
-		user.value = userData;
-	}
+	const setNicknameAction = (name: string) => {
+		nickname.value = name;
+	};
 
-	return { user, setUserAction };
+	return { nickname, setNicknameAction };
 });

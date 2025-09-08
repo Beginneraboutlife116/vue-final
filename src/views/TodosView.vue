@@ -14,9 +14,12 @@ import {
 	updateTodo,
 	updateTodoStatus,
 	deleteTodo,
-	DEFAULT_ERROR_MESSAGE,
 } from '@/apis';
-import { showSuccessToast, showErrorMessageModal } from '@/utils';
+import {
+	showSuccessToast,
+	showErrorMessageModal,
+	DEFAULT_ERROR_MESSAGE,
+} from '@/utils';
 
 interface Todo {
 	id: string;

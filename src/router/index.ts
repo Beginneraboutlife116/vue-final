@@ -42,28 +42,31 @@ router.beforeEach((to) => {
 	if (token) {
 		const authStore = useAuthStore();
 
-		checkout()
-			.then((response) => {
-				const { nickname } = response.data;
-				authStore.setNicknameAction(nickname);
+		return checkout().then((response) => {
+			const { nickname } = response.data;
+			authStore.setNicknameAction(nickname);
 
-				if (to.name !== 'todos') {
-					router.push('/todos');
-				}
-			})
-			.catch(() => {
-				Swal.fire({
-					icon: 'error',
-					title: '請重新登入',
-					toast: true,
-					position: 'top-end',
-					showConfirmButton: false,
-					timer: 1500,
-					timerProgressBar: true,
-				});
+			if (to.name !== 'todos') {
+				return '/todos';
+			}
+		}).catch(() => {
+			localStorage.removeItem('token');
 
-				router.replace('/');
+			Swal.fire({
+				icon: 'error',
+				title: '請重新登入',
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				timer: 1500,
+				timerProgressBar: true,
 			});
+
+			return {
+				path: '/',
+				replace: true
+			};
+		});
 	} else if (to.name === 'todos') {
 		Swal.fire({
 			icon: 'error',
@@ -75,7 +78,10 @@ router.beforeEach((to) => {
 			timerProgressBar: true,
 		});
 
-		router.replace('/');
+		return {
+			path: '/',
+			replace: true
+		};
 	}
 });
 

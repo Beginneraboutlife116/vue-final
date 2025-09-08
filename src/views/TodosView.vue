@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import Swal from 'sweetalert2';
 import { ref, computed, shallowRef, nextTick, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -8,7 +7,16 @@ import { useAuthStore } from '@/stores/authStore';
 import Input from '@/components/Input.vue';
 import Button from '@/components/Button.vue';
 
-import { logout } from '@/apis';
+import {
+	logout,
+	createTodo,
+	getTodos,
+	updateTodo,
+	updateTodoStatus,
+	deleteTodo,
+	DEFAULT_ERROR_MESSAGE,
+} from '@/apis';
+import { showSuccessToast, showErrorMessageModal } from '@/utils';
 
 interface Todo {
 	id: string;
@@ -29,6 +37,7 @@ const filter = ref(ALL);
 const todos = ref<Todo[]>([]);
 const newTodoContent = ref('');
 const inputRefs = shallowRef(new Map<string, HTMLInputElement>());
+const isLoading = ref(false);
 
 const filteredTodos = computed(() => {
 	if (filter.value === INCOMPLETED) {
@@ -58,15 +67,7 @@ const incompletedTodosCount = computed(() => {
 const handleLogout = () => {
 	logout()
 		.then((response) => {
-			Swal.fire({
-				icon: 'success',
-				title: response.data.message,
-				showConfirmButton: false,
-				timer: 1500,
-				toast: true,
-				position: 'top-end',
-				timerProgressBar: true,
-			});
+			showSuccessToast(response.data.message);
 
 			localStorage.removeItem('token');
 			authStore.setNicknameAction('');
@@ -74,10 +75,9 @@ const handleLogout = () => {
 			router.push('/');
 		})
 		.catch((error) => {
-			Swal.fire({
-				icon: 'error',
+			showErrorMessageModal({
 				title: '登出失敗',
-				text: error.response?.data?.message || '發生未知錯誤，請稍後再試',
+				text: error.response?.data?.message || DEFAULT_ERROR_MESSAGE,
 			});
 		});
 };
@@ -87,15 +87,22 @@ const onAddTodo = () => {
 		return;
 	}
 
-	const newTodo: Todo = {
-		id: Date.now().toString(),
-		createTime: Math.floor(Date.now() / 1000),
-		content: newTodoContent.value,
-		status: false,
-		isEditing: false,
-	};
+	createTodo(newTodoContent.value)
+		.then((response) => {
+			showSuccessToast('新增成功');
 
-	todos.value.push(newTodo);
+			todos.value.push({
+				...response.data.newTodo,
+				isEditing: false,
+			});
+		})
+		.catch((error) => {
+			showErrorMessageModal({
+				title: '新增失敗',
+				text: error.response?.data?.message || DEFAULT_ERROR_MESSAGE,
+			});
+		});
+
 	newTodoContent.value = '';
 };
 
@@ -103,6 +110,19 @@ const onCheckTodo = (id: string) => {
 	const todo = todos.value.find((todo) => todo.id === id);
 	if (todo) {
 		todo.status = !todo.status;
+
+		updateTodoStatus(id)
+			.then(() => {
+				showSuccessToast('更新待辦事項狀態成功');
+			})
+			.catch((error) => {
+				showErrorMessageModal({
+					title: '更新待辦事項狀態失敗',
+					text: error.response?.data?.message || DEFAULT_ERROR_MESSAGE,
+				});
+
+				todo.status = !todo.status;
+			});
 	}
 };
 
@@ -124,49 +144,64 @@ const onFinishEditTodo = (event: Event) => {
 		return;
 	}
 	const { name: id, value: content } = target;
-	const todo = todos.value.find((todo) => todo.id === id);
-	if (todo) {
-		todo.content = content;
-		todo.isEditing = false;
-	}
+
+	updateTodo(id, content)
+		.then(() => {
+			showSuccessToast('更新成功');
+
+			const todo = todos.value.find((todo) => todo.id === id);
+
+			if (todo) {
+				todo.content = content;
+				todo.isEditing = false;
+			}
+		})
+		.catch((error) => {
+			showErrorMessageModal({
+				title: '更新失敗',
+				text: error.response?.data?.message || DEFAULT_ERROR_MESSAGE,
+			});
+		});
 };
 
 const onDeleteTodo = (id: string) => {
-	todos.value = todos.value.filter((todo) => todo.id !== id);
+	deleteTodo(id)
+		.then(() => {
+			showSuccessToast('刪除成功');
+
+			todos.value = todos.value.filter((todo) => todo.id !== id);
+		})
+		.catch((error) => {
+			showErrorMessageModal({
+				title: '刪除失敗',
+				text: error.response?.data?.message || DEFAULT_ERROR_MESSAGE,
+			});
+		});
 };
 
 onMounted(() => {
-	const fetchedTodos = [
-		{
-			id: '123456789',
-			createTime: 1620281234,
-			content: '買晚餐1',
-			status: false,
-		},
-		{
-			id: '12345679',
-			createTime: 1620281234,
-			content: '買晚餐2',
-			status: false,
-		},
-		{
-			id: '12345689',
-			createTime: 1620281234,
-			content: '買晚餐3',
-			status: false,
-		},
-		{
-			id: '12345789',
-			createTime: 1620281234,
-			content: '買晚餐4',
-			status: true,
-		},
-	];
+	isLoading.value = true;
 
-	todos.value = fetchedTodos.map((todo) => ({
-		...todo,
-		isEditing: false,
-	}));
+	getTodos()
+		.then((response) => {
+			const fetchedTodos = response.data.data;
+			todos.value =
+				fetchedTodos.length > 0
+					? fetchedTodos.map((todo: Todo) => ({
+							...todo,
+							isEditing: false,
+						}))
+					: [];
+		})
+		.catch((error) => {
+			showErrorMessageModal({
+				title: '取得待辦事項失敗',
+				text: error.response?.data?.message || DEFAULT_ERROR_MESSAGE,
+			});
+		})
+		.finally(() => {
+			isLoading.value = false;
+		});
 });
 </script>
 
@@ -198,7 +233,8 @@ onMounted(() => {
 				</div>
 
 				<div v-if="todos.length === 0" class="text-center mt-15">
-					<span>目前尚無待辦事項</span>
+					<span v-if="isLoading">待辦事項載入中…</span>
+					<span v-else>目前尚無待辦事項</span>
 					<img
 						src="@/assets/images/empty.png"
 						alt="目前尚無待辦事項"

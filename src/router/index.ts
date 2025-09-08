@@ -1,8 +1,8 @@
-import Swal from 'sweetalert2';
 import { useAuthStore } from '@/stores/authStore';
 import { createRouter, createWebHashHistory } from 'vue-router';
 
 import { checkout } from '@/apis';
+import { showErrorToast } from '@/utils';
 
 const router = createRouter({
 	history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -42,45 +42,31 @@ router.beforeEach((to) => {
 	if (token) {
 		const authStore = useAuthStore();
 
-		return checkout().then((response) => {
-			const { nickname } = response.data;
-			authStore.setNicknameAction(nickname);
+		return checkout()
+			.then((response) => {
+				const { nickname } = response.data;
+				authStore.setNicknameAction(nickname);
 
-			if (to.name !== 'todos') {
-				return '/todos';
-			}
-		}).catch(() => {
-			localStorage.removeItem('token');
+				if (to.name !== 'todos') {
+					return '/todos';
+				}
+			})
+			.catch(() => {
+				localStorage.removeItem('token');
 
-			Swal.fire({
-				icon: 'error',
-				title: '請重新登入',
-				toast: true,
-				position: 'top-end',
-				showConfirmButton: false,
-				timer: 1500,
-				timerProgressBar: true,
+				showErrorToast('請重新登入');
+
+				return {
+					path: '/',
+					replace: true,
+				};
 			});
-
-			return {
-				path: '/',
-				replace: true
-			};
-		});
 	} else if (to.name === 'todos') {
-		Swal.fire({
-			icon: 'error',
-			title: '請先登入',
-			toast: true,
-			position: 'top-end',
-			showConfirmButton: false,
-			timer: 1500,
-			timerProgressBar: true,
-		});
+		showErrorToast('請先登入');
 
 		return {
 			path: '/',
-			replace: true
+			replace: true,
 		};
 	}
 });

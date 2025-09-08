@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import Swal from 'sweetalert2';
 import { ref, computed } from 'vue';
 import { useRouter, RouterLink } from 'vue-router';
 
@@ -8,7 +7,12 @@ import Input from '@/components/Input.vue';
 import Button from '@/components/Button.vue';
 
 import { signup, type SignupParams } from '@/apis';
-import { validateRequired } from './utils';
+import {
+	showErrorMessageModal,
+	showSuccessToast,
+	validateRequired,
+	DEFAULT_ERROR_MESSAGE,
+} from '@/utils';
 
 const router = useRouter();
 
@@ -51,8 +55,7 @@ const handleSubmit = () => {
 	}
 
 	if (!email.value || !nickname.value || !password.value) {
-		Swal.fire({
-			icon: 'error',
+		showErrorMessageModal({
 			title: '註冊失敗',
 			text: '欄位不可為空',
 		});
@@ -68,25 +71,14 @@ const handleSubmit = () => {
 
 	signup(params)
 		.then(() => {
-			Swal.fire({
-				icon: 'success',
-				title: '註冊成功',
-				showConfirmButton: false,
-				timer: 1500,
-				toast: true,
-				position: 'top-end',
-				timerProgressBar: true,
-			});
+			showSuccessToast('註冊成功');
 
 			router.push('/');
 		})
 		.catch((error) => {
-			const errorMessage =
-				error.response?.data?.message || '發生未知錯誤，請稍後再試';
-			Swal.fire({
-				icon: 'error',
+			showErrorMessageModal({
 				title: '註冊失敗',
-				text: errorMessage,
+				text: error.response?.data?.message || DEFAULT_ERROR_MESSAGE,
 			});
 		});
 };

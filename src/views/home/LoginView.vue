@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import Swal from 'sweetalert2';
 import { ref, computed } from 'vue';
 import { useRouter, RouterLink } from 'vue-router';
 
@@ -10,7 +9,12 @@ import Input from '@/components/Input.vue';
 import Button from '@/components/Button.vue';
 
 import { login, type LoginParams } from '@/apis';
-import { validateRequired } from './utils';
+import {
+	showErrorMessageModal,
+	showSuccessToast,
+	validateRequired,
+	DEFAULT_ERROR_MESSAGE,
+} from '@/utils';
 
 const router = useRouter();
 
@@ -28,17 +32,16 @@ const errorMessages = computed(() => {
 
 const handleSubmit = () => {
 	if (errorMessages.value.email || errorMessages.value.password) {
-		Swal.fire({
-			icon: 'error',
+		showErrorMessageModal({
 			title: '登入失敗',
 			text: '請檢查您的輸入',
 		});
+
 		return;
 	}
 
 	if (!email.value || !password.value) {
-		Swal.fire({
-			icon: 'error',
+		showErrorMessageModal({
 			title: '登入失敗',
 			text: '欄位不可為空',
 		});
@@ -59,30 +62,20 @@ const handleSubmit = () => {
 				throw new Error('請與客服連繫');
 			}
 
-			localStorage.setItem(
-				'token',
-				data.token
-			);
+			localStorage.setItem('token', data.token);
 
 			setNicknameAction(data.nickname);
-
-			Swal.fire({
-				icon: 'success',
-				title: '登入成功',
-				showConfirmButton: false,
-				timer: 1500,
-				toast: true,
-				position: 'top-end',
-				timerProgressBar: true,
-			});
+			showSuccessToast('登入成功');
 
 			router.push('/todos');
 		})
 		.catch((error) => {
-			Swal.fire({
-				icon: 'error',
+			showErrorMessageModal({
 				title: '登入失敗',
-				text: error.response?.data?.message || error.message || '發生未知錯誤，請稍後再試',
+				text:
+					error.response?.data?.message ||
+					error.message ||
+					DEFAULT_ERROR_MESSAGE,
 			});
 		});
 };

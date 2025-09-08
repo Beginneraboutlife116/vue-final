@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 import { ref, computed } from 'vue';
 import { useRouter, RouterLink } from 'vue-router';
 
@@ -14,7 +14,7 @@ import { validateRequired } from './utils';
 
 const router = useRouter();
 
-const { setUserAction } = useAuthStore();
+const { setNicknameAction } = useAuthStore();
 
 const email = ref(null);
 const password = ref(null);
@@ -49,7 +49,7 @@ const handleSubmit = () => {
 	const params = {
 		email: email.value,
 		password: password.value,
-	}
+	};
 
 	login(params)
 		.then((response) => {
@@ -59,12 +59,12 @@ const handleSubmit = () => {
 				throw new Error('請與客服連繫');
 			}
 
-			localStorage.setItem('auth-data', JSON.stringify({
-				exp: data.exp,
-				token: data.token
-			}));
+			localStorage.setItem(
+				'token',
+				data.token
+			);
 
-			setUserAction(data);
+			setNicknameAction(data.nickname);
 
 			Swal.fire({
 				icon: 'success',
@@ -72,8 +72,9 @@ const handleSubmit = () => {
 				showConfirmButton: false,
 				timer: 1500,
 				toast: true,
-				position: 'top-end'
-			})
+				position: 'top-end',
+				timerProgressBar: true,
+			});
 
 			router.push('/todos');
 		})
@@ -81,7 +82,7 @@ const handleSubmit = () => {
 			Swal.fire({
 				icon: 'error',
 				title: '登入失敗',
-				text: error.response?.data?.message  || '發生未知錯誤，請稍後再試',
+				text: error.response?.data?.message || error.message || '發生未知錯誤，請稍後再試',
 			});
 		});
 };

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 import { ref, computed } from 'vue';
 import { useRouter, RouterLink } from 'vue-router';
 
@@ -41,7 +41,12 @@ const errorMessages = computed(() => {
 });
 
 const handleSubmit = () => {
-	if (errorMessages.value.email || errorMessages.value.nickname || errorMessages.value.password || errorMessages.value.confirmPassword) {
+	if (
+		errorMessages.value.email ||
+		errorMessages.value.nickname ||
+		errorMessages.value.password ||
+		errorMessages.value.confirmPassword
+	) {
 		return;
 	}
 
@@ -59,27 +64,31 @@ const handleSubmit = () => {
 		email: email.value,
 		nickname: nickname.value,
 		password: password.value,
-	}
+	};
 
-	signup(params).then(() => {
-		Swal.fire({
-			icon: 'success',
-			title: '註冊成功',
-			showConfirmButton: false,
-			timer: 1500,
-			toast: true,
-			position: 'top-end'
-		})
+	signup(params)
+		.then(() => {
+			Swal.fire({
+				icon: 'success',
+				title: '註冊成功',
+				showConfirmButton: false,
+				timer: 1500,
+				toast: true,
+				position: 'top-end',
+				timerProgressBar: true,
+			});
 
-		router.push('/');
-	}).catch((error) => {
-		const errorMessage = error.response?.data?.message || '發生未知錯誤，請稍後再試';
-		Swal.fire({
-			icon: 'error',
-			title: '註冊失敗',
-			text: errorMessage,
+			router.push('/');
 		})
-	});
+		.catch((error) => {
+			const errorMessage =
+				error.response?.data?.message || '發生未知錯誤，請稍後再試';
+			Swal.fire({
+				icon: 'error',
+				title: '註冊失敗',
+				text: errorMessage,
+			});
+		});
 };
 </script>
 

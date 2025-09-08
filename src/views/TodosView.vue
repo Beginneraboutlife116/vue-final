@@ -14,6 +14,7 @@ import {
 	updateTodo,
 	updateTodoStatus,
 	deleteTodo,
+	DEFAULT_ERROR_MESSAGE,
 } from '@/apis';
 import { showSuccessToast, showErrorMessageModal } from '@/utils';
 
@@ -76,7 +77,7 @@ const handleLogout = () => {
 		.catch((error) => {
 			showErrorMessageModal({
 				title: '登出失敗',
-				text: error.response.data.message,
+				text: error.response?.data?.message || DEFAULT_ERROR_MESSAGE,
 			});
 		});
 };
@@ -98,7 +99,7 @@ const onAddTodo = () => {
 		.catch((error) => {
 			showErrorMessageModal({
 				title: '新增失敗',
-				text: error.response.data.message,
+				text: error.response?.data?.message || DEFAULT_ERROR_MESSAGE,
 			});
 		});
 
@@ -117,7 +118,7 @@ const onCheckTodo = (id: string) => {
 			.catch((error) => {
 				showErrorMessageModal({
 					title: '更新待辦事項狀態失敗',
-					text: error.response.data.message,
+					text: error.response?.data?.message || DEFAULT_ERROR_MESSAGE,
 				});
 
 				todo.status = !todo.status;
@@ -158,7 +159,7 @@ const onFinishEditTodo = (event: Event) => {
 		.catch((error) => {
 			showErrorMessageModal({
 				title: '更新失敗',
-				text: error.response.data.message,
+				text: error.response?.data?.message || DEFAULT_ERROR_MESSAGE,
 			});
 		});
 };
@@ -173,7 +174,7 @@ const onDeleteTodo = (id: string) => {
 		.catch((error) => {
 			showErrorMessageModal({
 				title: '刪除失敗',
-				text: error.response.data.message,
+				text: error.response?.data?.message || DEFAULT_ERROR_MESSAGE,
 			});
 		});
 };
@@ -195,7 +196,7 @@ onMounted(() => {
 		.catch((error) => {
 			showErrorMessageModal({
 				title: '取得待辦事項失敗',
-				text: error.response.data.message,
+				text: error.response?.data?.message || DEFAULT_ERROR_MESSAGE,
 			});
 		})
 		.finally(() => {

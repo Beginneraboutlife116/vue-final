@@ -13,6 +13,7 @@ import {
 	showErrorMessageModal,
 	showSuccessToast,
 	validateRequired,
+	DEFAULT_ERROR_MESSAGE,
 } from '@/utils';
 
 const router = useRouter();
@@ -71,7 +72,10 @@ const handleSubmit = () => {
 		.catch((error) => {
 			showErrorMessageModal({
 				title: '登入失敗',
-				text: error.response?.data?.message || error.message,
+				text:
+					error.response?.data?.message ||
+					error.message ||
+					DEFAULT_ERROR_MESSAGE,
 			});
 		});
 };

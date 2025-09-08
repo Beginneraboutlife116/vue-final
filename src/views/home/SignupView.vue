@@ -11,6 +11,7 @@ import {
 	showErrorMessageModal,
 	showSuccessToast,
 	validateRequired,
+	DEFAULT_ERROR_MESSAGE,
 } from '@/utils';
 
 const router = useRouter();
@@ -77,7 +78,7 @@ const handleSubmit = () => {
 		.catch((error) => {
 			showErrorMessageModal({
 				title: '註冊失敗',
-				text: error.response.data.message,
+				text: error.response?.data?.message || DEFAULT_ERROR_MESSAGE,
 			});
 		});
 };
